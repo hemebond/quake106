@@ -112,6 +112,24 @@ void() FireAmbient =
 	ambientsound (self.origin, "ambience/fire1.wav", 0.5, ATTN_STATIC);
 };
 
+
+void() flamespawn = {
+	newmis = spawn();
+	setorigin(newmis, self.origin + self.dest);
+	newmis.effects = EF_FLAME;
+
+	if (self.model)
+		makestatic(self);
+	else
+		remove(self);
+};
+
+void() torchflame = {
+	FireAmbient();
+	self.think = flamespawn;
+	self.nextthink = time + 0.1;
+};
+
 /*QUAKED light_torch_small_walltorch (0 .5 0) (-10 -10 -20) (10 10 20)
 Short wall torch
 Default light value is 200
@@ -121,8 +139,8 @@ void() light_torch_small_walltorch =
 {
 	precache_model ("progs/flame.mdl");
 	setmodel (self, "progs/flame.mdl");
-	FireAmbient ();
-	makestatic (self);
+	self.dest = '0 0 0';
+	torchflame();
 };
 
 /*QUAKED light_flame_large_yellow (0 1 0) (-10 -10 -12) (12 12 18)
