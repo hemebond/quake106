@@ -1,11 +1,11 @@
 
 // prototypes
-void () W_WeaponFrame;
+void() W_WeaponFrame;
 void() W_SetCurrentAmmo;
-void() player_pain;
+void(entity attacker, float damage) player_pain;
 void() player_stand1;
-void (vector org) spawn_tfog;
-void (vector org, entity death_owner) spawn_tdeath;
+void(vector org) spawn_tfog;
+void(vector org, entity death_owner) spawn_tdeath;
 
 float	modelindex_eyes, modelindex_player;
 
@@ -131,6 +131,7 @@ entity() FindIntermission =
 		return spot;
 
 	objerror ("FindIntermission: no spot");
+	return __NULL__;
 };
 
 
@@ -316,7 +317,7 @@ void() changelevel_touch =
 		return;
 	}
 
-	self.touch = SUB_Null;
+	self.touch = __NULL__;
 
 // we can't move people right now, because touch functions are called
 // in the middle of C movement code, so set a think time to do it
@@ -1356,8 +1357,6 @@ void(entity targ, entity attacker) ClientObituary =
 					bprint (" was smashed by a Shambler\n");
 				if (attacker.classname == "monster_tarbaby")
 					bprint (" was slimed by a Spawn\n");
-				if (attacker.classname == "monster_vomit")
-					bprint (" was vomited on by a Vomitus\n");
 				if (attacker.classname == "monster_wizard")
 					bprint (" was scragged by a Scrag\n");
 				if (attacker.classname == "monster_zombie")

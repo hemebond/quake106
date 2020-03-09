@@ -28,7 +28,6 @@ void() ai_face;
 
 
 float	enemy_vis, enemy_infront, enemy_range;
-float	enemy_yaw;
 
 
 void() knight_attack =

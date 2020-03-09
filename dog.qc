@@ -83,7 +83,7 @@ void()	Dog_JumpTouch =
 		if (self.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up
 //dprint ("popjump\n");
-	self.touch = SUB_Null;
+	self.touch = __NULL__;
 	self.think = dog_leap1;
 	self.nextthink = time + 0.1;
 
@@ -95,7 +95,7 @@ void()	Dog_JumpTouch =
 		return;	// not on ground yet
 	}
 
-	self.touch = SUB_Null;
+	self.touch = __NULL__;
 	self.think = dog_run1;
 	self.nextthink = time + 0.1;
 };
@@ -195,7 +195,7 @@ void() dog_painb14	=[	$painb14 ,	dog_painb15	] {};
 void() dog_painb15	=[	$painb15 ,	dog_painb16	] {};
 void() dog_painb16	=[	$painb16 ,	dog_run1	] {};
 
-void() dog_pain =
+void(entity attacker, float damage) dog_pain =
 {
 	sound (self, CHAN_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
 

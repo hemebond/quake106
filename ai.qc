@@ -298,8 +298,6 @@ local float	rsnd;
 		sound (self, CHAN_VOICE, "hknight/sight1.wav", 1, ATTN_NORM);
 	else if (self.classname == "monster_tarbaby")
 		sound (self, CHAN_VOICE, "blob/sight1.wav", 1, ATTN_NORM);
-	else if (self.classname == "monster_vomit")
-		sound (self, CHAN_VOICE, "vomitus/v_sight1.wav", 1, ATTN_NORM);
 	else if (self.classname == "monster_enforcer")
 	{
 		rsnd = rint(random() * 3);
@@ -354,17 +352,17 @@ float() FindTarget =
 	local entity	client;
 	local float		r;
 
-// if the first spawnflag bit is set, the monster will only wake up on
-// really seeing the player, not another monster getting angry
+	// if the first spawnflag bit is set, the monster will only wake up on
+	// really seeing the player, not another monster getting angry
 
-// spawnflags & 3 is a big hack, because zombie crucified used the first
-// spawn flag prior to the ambush flag, and I forgot about it, so the second
-// spawn flag works as well
+	// spawnflags & 3 is a big hack, because zombie crucified used the first
+	// spawn flag prior to the ambush flag, and I forgot about it, so the second
+	// spawn flag works as well
 	if (sight_entity_time >= time - 0.1 && !(self.spawnflags & 3) )
 	{
 		client = sight_entity;
 		if (client.enemy == self.enemy)
-			return;
+			return FALSE;
 	}
 	else
 	{
@@ -584,7 +582,7 @@ float()	DogCheckAttack;
 float() CheckAnyAttack =
 {
 	if (!enemy_vis)
-		return;
+		return __NULL__;
 	if (self.classname == "monster_army")
 		return SoldierCheckAttack ();
 	if (self.classname == "monster_ogre")
@@ -608,7 +606,7 @@ ai_run_melee
 Turn and close until within an angle to launch a melee attack
 =============
 */
-void() ai_run_melee =
+void(float enemy_yaw) ai_run_melee =
 {
 	self.ideal_yaw = enemy_yaw;
 	ChangeYaw ();
@@ -628,7 +626,7 @@ ai_run_missile
 Turn in place until within an angle to launch a missile attack
 =============
 */
-void() ai_run_missile =
+void(float enemy_yaw) ai_run_missile =
 {
 	self.ideal_yaw = enemy_yaw;
 	ChangeYaw ();
@@ -647,7 +645,7 @@ ai_run_slide
 Strafe sideways, but stay at aproximately the same range
 =============
 */
-void() ai_run_slide =
+void(float enemy_yaw) ai_run_slide =
 {
 	local float	ofs;
 
@@ -679,6 +677,7 @@ void(float dist) ai_run =
 	local	vector	delta;
 	local	float	axis;
 	local	float	direct, ang_rint, ang_floor, ang_ceil;
+	local   float   enemy_yaw;
 
 	movedist = dist;
 // see if the enemy is dead
@@ -703,12 +702,12 @@ void(float dist) ai_run =
 
 	self.show_hostile = time + 1;		// wake up other monsters
 
-// check knowledge of enemy
+	// check knowledge of enemy
 	enemy_vis = visible(self.enemy);
 	if (enemy_vis)
 		self.search_time = time + 5;
 
-// look for other coop players
+	// look for other coop players
 	if (coop && self.search_time < time)
 	{
 		if (FindTarget ())
@@ -721,27 +720,27 @@ void(float dist) ai_run =
 
 	if (self.attack_state == AS_MISSILE)
 	{
-//dprint ("ai_run_missile\n");
-		ai_run_missile ();
+		//dprint ("ai_run_missile\n");
+		ai_run_missile(enemy_yaw);
 		return;
 	}
 	if (self.attack_state == AS_MELEE)
 	{
-//dprint ("ai_run_melee\n");
-		ai_run_melee ();
+		//dprint ("ai_run_melee\n");
+		ai_run_melee(enemy_yaw);
 		return;
 	}
 
-	if (CheckAnyAttack ())
+	if (CheckAnyAttack())
 		return;					// beginning an attack
 
 	if (self.attack_state == AS_SLIDING)
 	{
-		ai_run_slide ();
+		ai_run_slide(enemy_yaw);
 		return;
 	}
 
-// head straight in
+	// head straight in
 	movetogoal (dist);		// done in C code...
 };
 

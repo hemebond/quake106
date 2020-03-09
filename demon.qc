@@ -12,6 +12,8 @@ $origin 0 0 24
 $base base
 $skin base
 
+$frame idle1 idle2 idle3 idle4 idle5 idle6 idle7 idle8 idle9 idle10 idle11 idle12 idle13
+
 $frame stand1 stand2 stand3 stand4 stand5 stand6 stand7 stand8 stand9
 $frame stand10 stand11 stand12 stand13
 
@@ -344,7 +346,7 @@ void()	Demon_JumpTouch =
 		if (self.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up
 //dprint ("popjump\n");
-	self.touch = SUB_Null;
+	self.touch = __NULL__;
 	self.think = demon1_jump1;
 	self.nextthink = time + 0.1;
 
@@ -356,7 +358,7 @@ void()	Demon_JumpTouch =
 		return;	// not on ground yet
 	}
 
-	self.touch = SUB_Null;
+	self.touch = __NULL__;
 	self.think = demon1_jump11;
 	self.nextthink = time + 0.1;
 };

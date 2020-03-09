@@ -170,13 +170,12 @@ void() fire_fly;
 void() fire_touch;
 void() misc_fireball =
 {
-
 	precache_model ("progs/lavaball.mdl");
 	self.classname = "fireball";
 	self.nextthink = time + (random() * 5);
 	self.think = fire_fly;
 	if (!self.speed)
-		self.speed == 1000;
+		self.speed = 1000;
 };
 
 void() fire_fly =
@@ -533,7 +532,7 @@ void() func_illusionary =
 	self.movetype = MOVETYPE_NONE;
 	self.solid = SOLID_NOT;
 	setmodel (self, self.model);
-	makestatic ();
+	makestatic(self);
 };
 
 /*QUAKED func_episodegate (0 .5 .8) ? E1 E2 E3 E4
