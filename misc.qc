@@ -114,14 +114,18 @@ void() FireAmbient =
 
 
 void() flamespawn = {
-	newmis = spawn();
-	setorigin(newmis, self.origin + self.dest);
-	newmis.effects = EF_FLAME;
+	local entity emitter;
+
+	emitter = spawn();
+	setorigin(emitter, self.origin + self.dest);
+	emitter.effects = EF_FLAME;
 
 	if (self.model)
 		makestatic(self);
 	else
 		remove(self);
+
+	//eprint(emitter);
 };
 
 void() torchflame = {
@@ -139,6 +143,7 @@ void() light_torch_small_walltorch =
 {
 	precache_model ("progs/flame.mdl");
 	setmodel (self, "progs/flame.mdl");
+
 	self.dest = '0 0 0';
 	torchflame();
 };
